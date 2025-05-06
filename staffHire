@@ -1,0 +1,93 @@
+public class StaffHire {
+
+    // Protected attributes can be accessed by subclasses and classes in the same package
+    protected int vacancyNumber;           // Unique ID for the job vacancy
+    protected String designationType;      // The job title or position (e.g., "Manager", "Engineer")
+    protected String jobType;              // Type of job (e.g., "Full-time", "Part-time")
+    protected String staffName;            // Name of the person hired
+    protected String joiningDate;          // Date the person joined
+    protected String qualification;        // Qualification of the hired person
+    protected String appointedBy;          // Who appointed the staff
+    protected boolean joined;              // Status indicating whether the staff has joined
+
+    // Constructor to initialize mandatory fields and set defaults for optional fields
+    public StaffHire(int vacancyNumber, String designationType, String jobType) {
+        this.vacancyNumber = vacancyNumber;
+        this.designationType = designationType;
+        this.jobType = jobType;
+        this.staffName = "";
+        this.joiningDate = "";
+        this.qualification = "";
+        this.appointedBy = "";
+        this.joined = false;
+    }
+
+    // Getters for accessing the private/protected fields
+
+    public int getVacancyNumber() {
+        return vacancyNumber;
+    }
+
+    public String getDesignationType() {
+        return designationType;
+    }
+
+    public String getJobType() {
+        return jobType;
+    }
+
+    public String getStaffName() {
+        return staffName;
+    }
+
+    public String getJoiningDate() {
+        return joiningDate;
+    }
+
+    public String getQualification() {
+        return qualification;
+    }
+
+    public String getAppointedBy() {
+        return appointedBy;
+    }
+
+    public boolean isJoined() {
+        return joined;
+    }
+
+    // Setters to allow updating of certain fields
+
+    public void setStaffName(String staffName) {
+        this.staffName = staffName;
+    }
+
+    public void setJoiningDate(String joiningDate) {
+        this.joiningDate = joiningDate;
+    }
+
+    public void setQualification(String qualification) {
+        this.qualification = qualification;
+    }
+
+    public void setAppointedBy(String appointedBy) {
+        this.appointedBy = appointedBy;
+    }
+
+    public void setJoined(boolean joined) {
+        this.joined = joined;
+    }
+
+    // Overriding the toString() method to display all field values in a readable format
+    @Override
+    public String toString() {
+        return "Vacancy Number: " + vacancyNumber + "\n" +
+               "Designation: " + designationType + "\n" +
+               "Job Type: " + jobType + "\n" +
+               "Staff Name: " + staffName + "\n" +
+               "Joining Date: " + joiningDate + "\n" +
+               "Qualification: " + qualification + "\n" +
+               "Appointed By: " + appointedBy + "\n" +
+               "Joined: " + joined + "\n";
+    }
+}
