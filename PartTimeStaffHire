@@ -1,0 +1,73 @@
+public class PartTimeStaffHire extends StaffHire {
+    
+    // Attributes specific to part-time staff
+    private int workingHour;           // Number of working hours per day
+    private double wagesPerHour;       // Wages paid per hour
+    private String shifts;             // Shift information (e.g., Morning, Evening)
+    private boolean terminated;        // Indicates if the staff has been terminated
+
+    // Constructor to initialize the part-time staff details
+    public PartTimeStaffHire(int vacancyNumber, String designationType, String jobType, int workingHour, double wagesPerHour, String shifts) {
+        super(vacancyNumber, designationType, jobType); // Initialize inherited properties
+        this.workingHour = workingHour;
+        this.wagesPerHour = wagesPerHour;
+        this.shifts = shifts;
+        this.terminated = false;       // By default, the staff is not terminated
+    }
+
+    // Getter for working hours
+    public int getWorkingHour() {
+        return workingHour;
+    }
+
+    // Getter for wages per hour
+    public double getWagesPerHour() {
+        return wagesPerHour;
+    }
+
+    // Getter for shift information
+    public String getShifts() {
+        return shifts;
+    }
+
+    // Getter for termination status
+    public boolean isTerminated() {
+        return terminated;
+    }
+
+    // Setter for shift information
+    public void setShifts(String shifts) {
+        if (isJoined()) {  // Only allow updating shift if the staff is joined
+            this.shifts = shifts;
+        } else {
+            System.out.println("Staff has not joined to set shifts.");
+        }
+    }
+
+    // Method to terminate a part-time staff member
+    public void terminate() {
+        if (terminated) {
+            // If already terminated, notify user
+            System.out.println("Staff is already terminated.");
+        } else {
+            // Reset staff details and mark as terminated
+            setStaffName("");
+            setJoiningDate("");
+            setQualification("");
+            setAppointedBy("");
+            setJoined(false);
+            this.terminated = true;
+        }
+    }
+
+    // Override toString method to display part-time staff details
+    @Override
+    public String toString() {
+        return super.toString() +                   // Include common staff details from the parent class
+               "Working Hours: " + workingHour + "\n" +
+               "Wages Per Hour: " + wagesPerHour + "\n" +
+               "Shifts: " + shifts + "\n" +
+               "Terminated: " + terminated + "\n" +
+               "Daily Income: " + (workingHour * wagesPerHour) + "\n"; // Calculate and show daily income
+    }
+}
