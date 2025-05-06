@@ -1,0 +1,45 @@
+public class FullTimeStaffHire extends StaffHire {
+
+    // Private attributes specific to full-time staff
+    private double salary;                   // Salary of the full-time staff
+    private int weeklyFractionalHours;       // Weekly working hours (can represent fractional or fixed hours)
+
+    // Constructor to initialize all necessary fields including those inherited from StaffHire
+    public FullTimeStaffHire(int vacancyNumber, String designationType, String jobType, double salary, int weeklyFractionalHours) {
+        super(vacancyNumber, designationType, jobType); // Call to the parent class constructor
+        this.salary = salary;
+        this.weeklyFractionalHours = weeklyFractionalHours;
+    }
+
+    // Getter for salary
+    public double getSalary() {
+        return salary;
+    }
+
+    // Getter for weekly working hours
+    public int getWeeklyFractionalHours() {
+        return weeklyFractionalHours;
+    }
+
+    // Setter for salary with condition: only allow update if staff is already appointed (joined)
+    public void setSalary(double salary) {
+        if (isJoined()) { // Check if the staff has joined before allowing salary change
+            this.salary = salary;
+        } else {
+            System.out.println("No staff appointed to set the salary."); // Feedback if not yet joined
+        }
+    }
+
+    // Setter for weekly working hours
+    public void setWeeklyFractionalHours(int weeklyFractionalHours) {
+        this.weeklyFractionalHours = weeklyFractionalHours;
+    }
+
+    // Override the toString() method to include full-time staff-specific information
+    @Override
+    public String toString() {
+        return super.toString() + // Include details from the parent class
+               "Salary: " + salary + "\n" +
+               "Weekly Fractional Hours: " + weeklyFractionalHours + "\n";
+    }
+}
