@@ -1,0 +1,304 @@
+// Required imports for GUI components and data handling
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+
+// Main GUI class for the recruitment system
+public class RecruitmentSystemGUI {
+
+    // List to store staff hire objects (both full-time and part-time)
+    private ArrayList<StaffHire> staffList = new ArrayList<>();
+
+    // GUI components
+    private JFrame frame;
+    private JTextField tfVacancy, tfDesignation, tfJobType, tfName, tfDate, tfQualification, tfAppointedBy,
+    tfSalary, tfWeeklyHours, tfWages, tfWorkingHours, tfShifts, tfTerminateVacancy, tfDisplayNumber;
+    private JTextArea displayArea;
+
+    // Constructor to initialize and build the GUI
+    public RecruitmentSystemGUI() {
+        // Frame setup
+        frame = new JFrame("Recruitment System");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+        frame.setSize(800, 900);
+
+        // Panel to hold input fields
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(16, 2, 5, 5)); // 16 rows, 2 columns
+
+        // Text fields for data input
+        tfVacancy = new JTextField();
+        tfDesignation = new JTextField();
+        tfJobType = new JTextField();
+        tfName = new JTextField();
+        tfDate = new JTextField();
+        tfQualification = new JTextField();
+        tfAppointedBy = new JTextField();
+        tfSalary = new JTextField();
+        tfWeeklyHours = new JTextField();
+        tfWages = new JTextField();
+        tfWorkingHours = new JTextField();
+        tfShifts = new JTextField();
+        tfTerminateVacancy = new JTextField();
+        tfDisplayNumber = new JTextField();
+
+        // Add label-field pairs to input panel
+        inputPanel.add(new JLabel("Vacancy Number:"));
+        inputPanel.add(tfVacancy);
+        inputPanel.add(new JLabel("Designation:"));
+        inputPanel.add(tfDesignation);
+        inputPanel.add(new JLabel("Job Type:"));
+        inputPanel.add(tfJobType);
+        inputPanel.add(new JLabel("Name:"));
+        inputPanel.add(tfName);
+        inputPanel.add(new JLabel("Joining Date (DayMonthYear):"));
+        inputPanel.add(tfDate);
+        inputPanel.add(new JLabel("Qualification:"));
+        inputPanel.add(tfQualification);
+        inputPanel.add(new JLabel("Appointed By:"));
+        inputPanel.add(tfAppointedBy);
+        inputPanel.add(new JLabel("Salary:"));
+        inputPanel.add(tfSalary);
+        inputPanel.add(new JLabel("Weekly Hours:"));
+        inputPanel.add(tfWeeklyHours);
+        inputPanel.add(new JLabel("Wages Per Hour:"));
+        inputPanel.add(tfWages);
+        inputPanel.add(new JLabel("Working Hours:"));
+        inputPanel.add(tfWorkingHours);
+        inputPanel.add(new JLabel("Shifts:"));
+        inputPanel.add(tfShifts);
+        inputPanel.add(new JLabel("Terminate Vacancy #:"));
+        inputPanel.add(tfTerminateVacancy);
+        inputPanel.add(new JLabel("Display Number (Optional):"));
+        inputPanel.add(tfDisplayNumber);
+
+        // Buttons for actions
+        JButton btnAddFullTime = new JButton("Add Full Time");
+        JButton btnAddPartTime = new JButton("Add Part Time");
+        JButton btnSetSalary = new JButton("Set Salary");
+        JButton btnSetShifts = new JButton("Set Working Shifts");
+        JButton btnTerminate = new JButton("Terminate Part Time");
+        JButton btnDisplay = new JButton("Display All Staff");
+        JButton btnClear = new JButton("Clear Fields");
+        JButton btnClearList = new JButton("Clear Staff List");
+
+        // Button panel
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(2, 4, 10, 10));
+        buttonPanel.add(btnAddFullTime);
+        buttonPanel.add(btnAddPartTime);
+        buttonPanel.add(btnSetSalary);
+        buttonPanel.add(btnSetShifts);
+        buttonPanel.add(btnTerminate);
+        buttonPanel.add(btnDisplay);
+        buttonPanel.add(btnClear);
+        buttonPanel.add(btnClearList);
+
+        // Text area for displaying output
+        displayArea = new JTextArea(15, 50);
+        displayArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(displayArea);
+
+        // Adding all main sections to the frame
+        frame.add(inputPanel, BorderLayout.NORTH);
+        frame.add(buttonPanel, BorderLayout.CENTER);
+        frame.add(scrollPane, BorderLayout.SOUTH);
+
+        // Button action listeners to call corresponding methods
+        btnAddFullTime.addActionListener(e -> addFullTimeStaff());
+        btnAddPartTime.addActionListener(e -> addPartTimeStaff());
+        btnSetSalary.addActionListener(e -> setSalary());
+        btnSetShifts.addActionListener(e -> setShifts());
+        btnTerminate.addActionListener(e -> terminatePartTimeStaff());
+        btnDisplay.addActionListener(e -> displayAllStaffDetails());
+        btnClear.addActionListener(e -> clearFields());
+        btnClearList.addActionListener(e -> clearStaffList());
+
+        // Make frame visible
+        frame.setVisible(true);
+    }
+
+    // Adds a full-time staff to the system
+    private void addFullTimeStaff() {
+        try {
+            int vac = Integer.parseInt(tfVacancy.getText());
+            double salary = Double.parseDouble(tfSalary.getText());
+            int hours = Integer.parseInt(tfWeeklyHours.getText());
+            String staffName = tfName.getText();
+            String joiningDate = tfDate.getText();
+            String qualification = tfQualification.getText();
+            String appointedBy = tfAppointedBy.getText();
+
+            // Input validation
+            if (staffName.isEmpty() || joiningDate.isEmpty() || qualification.isEmpty() || appointedBy.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Please fill in all required fields.");
+                return;
+            }
+
+            // Prevent duplicate vacancy numbers
+            for (StaffHire sh : staffList) {
+                if (sh.getVacancyNumber() == vac) {
+                    JOptionPane.showMessageDialog(frame, "Vacancy number already exists.");
+                    return;
+                }
+            }
+
+            // Create and configure FullTimeStaffHire object
+            FullTimeStaffHire f = new FullTimeStaffHire(vac, tfDesignation.getText(), tfJobType.getText(), salary, hours);
+            f.setStaffName(staffName);
+            f.setJoiningDate(joiningDate);
+            f.setQualification(qualification);
+            f.setAppointedBy(appointedBy);
+            f.setJoined(true);
+            staffList.add(f);
+
+            JOptionPane.showMessageDialog(frame, "Full Time Staff Added");
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(frame, "Invalid input: " + ex.getMessage());
+        }
+    }
+
+    // Adds a part-time staff to the system
+    private void addPartTimeStaff() {
+        try {
+            int vac = Integer.parseInt(tfVacancy.getText());
+            int hours = Integer.parseInt(tfWorkingHours.getText());
+            double wage = Double.parseDouble(tfWages.getText());
+            String shifts = tfShifts.getText();
+            String staffName = tfName.getText();
+            String joiningDate = tfDate.getText();
+            String qualification = tfQualification.getText();
+            String appointedBy = tfAppointedBy.getText();
+
+            // Input validation
+            if (shifts.isEmpty() || staffName.isEmpty() || joiningDate.isEmpty() || qualification.isEmpty() || appointedBy.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Please fill in all required fields.");
+                return;
+            }
+
+            // Prevent duplicate vacancy numbers
+            for (StaffHire sh : staffList) {
+                if (sh.getVacancyNumber() == vac) {
+                    JOptionPane.showMessageDialog(frame, "Vacancy number already exists.");
+                    return;
+                }
+            }
+
+            // Create and configure PartTimeStaffHire object
+            PartTimeStaffHire p = new PartTimeStaffHire(vac, tfDesignation.getText(), tfJobType.getText(), hours, wage, shifts);
+            p.setStaffName(staffName);
+            p.setJoiningDate(joiningDate);
+            p.setQualification(qualification);
+            p.setAppointedBy(appointedBy);
+            p.setJoined(true);
+            staffList.add(p);
+
+            JOptionPane.showMessageDialog(frame, "Part Time Staff Added");
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(frame, "Invalid input: " + ex.getMessage());
+        }
+    }
+
+    // Updates salary of a full-time staff
+    private void setSalary() {
+        try {
+            int vac = Integer.parseInt(tfVacancy.getText());
+            double newSalary = Double.parseDouble(tfSalary.getText());
+            for (StaffHire sh : staffList) {
+                if (sh instanceof FullTimeStaffHire && sh.getVacancyNumber() == vac) {
+                    ((FullTimeStaffHire) sh).setSalary(newSalary);
+                    JOptionPane.showMessageDialog(frame, "Salary updated.");
+                    return;
+                }
+            }
+            JOptionPane.showMessageDialog(frame, "Vacancy number not found.");
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(frame, "Invalid input: " + ex.getMessage());
+        }
+    }
+
+    // Updates working shifts of a part-time staff
+    private void setShifts() {
+        try {
+            int vac = Integer.parseInt(tfVacancy.getText());
+            String newShift = tfShifts.getText();
+            for (StaffHire sh : staffList) {
+                if (sh instanceof PartTimeStaffHire && sh.getVacancyNumber() == vac) {
+                    ((PartTimeStaffHire) sh).setShifts(newShift);
+                    JOptionPane.showMessageDialog(frame, "Shifts updated.");
+                    return;
+                }
+            }
+            JOptionPane.showMessageDialog(frame, "Vacancy number not found.");
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(frame, "Invalid input: " + ex.getMessage());
+        }
+    }
+
+    // Terminates a part-time staff based on vacancy number
+    private void terminatePartTimeStaff() {
+        try {
+            int vac = Integer.parseInt(tfTerminateVacancy.getText());
+            for (StaffHire sh : staffList) {
+                if (sh instanceof PartTimeStaffHire && sh.getVacancyNumber() == vac) {
+                    PartTimeStaffHire partTimeStaff = (PartTimeStaffHire) sh;
+                    if (partTimeStaff.isTerminated()) {
+                        JOptionPane.showMessageDialog(frame, "The staff is already terminated.");
+                        return;
+                    }
+                    partTimeStaff.terminate();
+                    JOptionPane.showMessageDialog(frame, "Part Time Staff Terminated");
+                    return;
+                }
+            }
+            JOptionPane.showMessageDialog(frame, "Vacancy number not found.");
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(frame, "Invalid input: Please enter a valid vacancy number.");
+        }
+    }
+
+    // Clears all input fields
+    private void clearFields() {
+        tfVacancy.setText("");
+        tfDesignation.setText("");
+        tfJobType.setText("");
+        tfName.setText("");
+        tfDate.setText("");
+        tfQualification.setText("");
+        tfAppointedBy.setText("");
+        tfSalary.setText("");
+        tfWeeklyHours.setText("");
+        tfWages.setText("");
+        tfWorkingHours.setText("");
+        tfShifts.setText("");
+        tfTerminateVacancy.setText("");
+        tfDisplayNumber.setText("");
+    }
+
+    // Clears the staff list and display area
+    private void clearStaffList() {
+        staffList.clear();
+        displayArea.setText("");
+        JOptionPane.showMessageDialog(frame, "Staff list has been cleared.");
+    }
+
+    private void displayAllStaffDetails() {
+        if (staffList.isEmpty()) {
+            displayArea.setText("No staff available to display.");
+            return;
+        }
+
+        displayArea.setText("");
+        for (StaffHire sh : staffList) {
+            displayArea.append(sh.toString() + "\n");
+            displayArea.append("-------------------------------\n");
+        }
+    }
+
+    // Main method to run the GUI
+    public static void main(String[] args) {
+        new RecruitmentSystemGUI();
+    }
+}
